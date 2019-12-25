@@ -2,6 +2,7 @@ package main
 
 import (
     "github.com/micro/go-micro/client"
+    "github.com/plexmediamanager/micro-manager/web"
     "github.com/plexmediamanager/service"
     "github.com/plexmediamanager/service/log"
     "time"
@@ -30,6 +31,13 @@ func main() {
     }
 
     go application.StartMicroService()
+
+    go func() {
+        err := web.StartServer(application)
+        if err != nil {
+            log.Panic(err)
+        }
+    }()
 
     service.WaitForOSSignal(1)
 }
