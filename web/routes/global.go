@@ -3,7 +3,10 @@ package routes
 import (
     "encoding/json"
     format "fmt"
+    "github.com/micro/go-micro/client"
     classesAPI "github.com/plexmediamanager/micro-manager/classes/api"
+    "github.com/plexmediamanager/service"
+    "log"
     "net/http"
     "time"
 )
@@ -20,6 +23,13 @@ type FailedResponse struct {
     Data                    interface{}     `json:"data"`
     Message                 string          `json:"message"`
     RequestedOn             int64           `json:"requested_on"`
+}
+
+func HandleAPIInformation(writer http.ResponseWriter, request *http.Request) {
+    sendResponse(writer, &SuccessfulResponse {
+        Message:     "Successfully fetched API information",
+        Data:        classesAPI.GetAPIGeneralInformation(),
+    }, http.StatusOK)
 }
 
 // Return successful response
@@ -46,9 +56,11 @@ func sendError(writer http.ResponseWriter, response *FailedResponse, statusCode 
     }
 }
 
-func HandleAPIInformation(writer http.ResponseWriter, request *http.Request) {
-    sendResponse(writer, &SuccessfulResponse {
-        Message:     "Successfully fetched API information",
-        Data:        classesAPI.GetAPIGeneralInformation(),
-    }, http.StatusOK)
+// Get micro client instance
+func microClient() client.Client {
+    if application, ok := service.FromContext(); ok {
+        return application.Service().Client()
+    }
+    log.Panic("Well, it happened.... There was no context, no idea why.")
+    return nil
 }

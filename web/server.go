@@ -40,9 +40,24 @@ func StartServer(app *service.Application) error {
 // Register all routes
 func registerRoutes(router *mux.Router) {
     router.HandleFunc("/", routes.HandleAPIInformation).Methods(http.MethodGet)
+    registerSeriesRoutes(router)
+    registerMoviesRoutes(router)
     registerDashboardRoutes(router)
 }
 
+// Register Series routes
+func registerSeriesRoutes(router *mux.Router) {
+    series := router.PathPrefix("/series").Subrouter()
+    series.HandleFunc("", routes.HandleSeriesList).Methods(http.MethodGet)
+}
+
+// Register Movies routes
+func registerMoviesRoutes(router *mux.Router) {
+    movies := router.PathPrefix("/movies").Subrouter()
+    movies.HandleFunc("", routes.HandleMoviesList).Methods(http.MethodGet)
+}
+
+// Register Dashboard routes
 func registerDashboardRoutes(router *mux.Router) {
     dashboard := router.PathPrefix("/dashboard").Subrouter()
     dashboard.HandleFunc("/server-information", routes.HandleDashboardServerInformation).Methods(http.MethodGet)
