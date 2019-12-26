@@ -64,3 +64,12 @@ func microClient() client.Client {
     log.Panic("Well, it happened.... There was no context, no idea why.")
     return nil
 }
+
+// Build redis cache key
+func buildRedisCacheKey(keyType string, tableName string, saveType interface{}) string {
+    return format.Sprintf("%s::%s:%s",
+        keyType,
+        tableName,
+        format.Sprint(saveType),
+    )
+}

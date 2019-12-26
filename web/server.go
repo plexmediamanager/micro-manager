@@ -53,6 +53,7 @@ func registerSeriesRoutes(router *mux.Router) {
 
 // Register Movies routes
 func registerMoviesRoutes(router *mux.Router) {
+    routes.InitializeMovieRouter()
     movies := router.PathPrefix("/movies").Subrouter()
     movies.HandleFunc("", routes.HandleMoviesList).Methods(http.MethodGet)
 }

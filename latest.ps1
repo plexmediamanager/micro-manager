@@ -16,5 +16,5 @@ foreach ($line in $goModContent) {
 }
 
 foreach ($module in $shouldBeUpdated) {
-    & go get $module.Trim()@master
+    & go get "$($module.Trim())@HEAD"
 }
